@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, current_app, request
+import os
+from flask import Flask, jsonify, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -8,30 +9,41 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('config.Config')
+
+    database_url = os.environ.get("DATABASE_URL")
+
+    if database_url:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///local.db"
+
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
     migrate.init_app(app, db)
 
     CORS(app, resources={
         r"/api/*": {
-            "origins": "*",                    
+            "origins": "*",
             "methods": ["GET", "POST", "DELETE", "OPTIONS"],
             "allow_headers": [
                 "Content-Type",
                 "Authorization",
-                "X-User-ID"                    
+                "X-User-ID"
             ],
-            "max_age": 86400,                   
-            "supports_credentials": False       
+            "max_age": 86400,
+            "supports_credentials": False
         }
     })
 
     from .routes.employee import employee_bp
     from .routes.attendance import attendance_bp
 
-    app.register_blueprint(employee_bp, url_prefix='/api')
-    app.register_blueprint(attendance_bp, url_prefix='/api')
+    app.register_blueprint(employee_bp, url_prefix="/api")
+    app.register_blueprint(attendance_bp, url_prefix="/api")
 
     @app.errorhandler(400)
     @app.errorhandler(404)
