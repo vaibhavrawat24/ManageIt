@@ -44,19 +44,32 @@ export default function EmployeeForm({ onSuccess }: Props) {
   const onSubmit = async (data: FormData) => {
     setError(null);
     setLoading(true);
+
     try {
-      await api.post("/employees", data);
+      const response = await api.post("/employees", data);
+      console.log("[EmployeeForm] Response data:", response.data);
+
       reset();
       toast.success("Employee added successfully");
       onSuccess();
     } catch (err: any) {
-      const message = err.response?.data?.error || "Failed to add employee";
+      let message = "Failed to add employee";
+
+      if (err.response?.data) {
+        message =
+          err.response.data.error ||
+          (err.response.data.errors &&
+            Object.values(err.response.data.errors).flat().join(", ")) ||
+          message;
+      }
+
       setError(message);
       toast.error(message);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">

@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify, current_app, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_cors import CORS                   
+from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -15,9 +15,15 @@ def create_app():
 
     CORS(app, resources={
         r"/api/*": {
-            "origins": "*",                 
+            "origins": "*",                    
             "methods": ["GET", "POST", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"]
+            "allow_headers": [
+                "Content-Type",
+                "Authorization",
+                "X-User-ID"                    
+            ],
+            "max_age": 86400,                   
+            "supports_credentials": False       
         }
     })
 
@@ -31,15 +37,14 @@ def create_app():
     @app.errorhandler(404)
     @app.errorhandler(409)
     def handle_error(error):
-        response = {
+        return jsonify({
             "error": error.description or "Bad Request",
             "status": error.code
-        }
-        return response, error.code
+        }), error.code
 
     @app.errorhandler(Exception)
     def handle_exception(e):
-        current_app.logger.error(f"Unhandled exception: {str(e)}", exc_info=True)
+        current_app.logger.exception(f"Unhandled exception: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
 
     return app

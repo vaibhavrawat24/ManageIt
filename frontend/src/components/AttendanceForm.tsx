@@ -65,11 +65,30 @@ export default function AttendanceForm({
 
     try {
       await api.post("/attendance", data);
-      reset();
+      setValue("date", new Date().toISOString().split("T")[0]); 
+      setValue("status", "present");
       toast.success("Attendance marked successfully");
       onSuccess();
     } catch (err: any) {
-      const message = err.response?.data?.error || "Failed to mark attendance";
+      let message = "Failed to mark attendance";
+
+      if (err.response?.data) {
+        if (err.response.data.error) {
+          message = err.response.data.error;
+        } else if (err.response.data.errors) {
+          const errors = err.response.data.errors;
+          message = Array.isArray(errors)
+            ? errors.join(", ")
+            : typeof errors === "object"
+              ? Object.values(errors).flat().join(", ")
+              : errors || message;
+        } else if (err.response.data.message) {
+          message = err.response.data.message;
+        }
+      } else if (err.message) {
+        message = err.message;
+      }
+
       setSubmitError(message);
       toast.error(message);
     } finally {
