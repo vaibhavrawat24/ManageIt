@@ -1,10 +1,15 @@
 # ManageIt - HRMS Lite
 
 # Note 
-- Hit backend first at https://manageit-kkrl.onrender.com/api/employees to wake up free Render instance
+- Hit backend first at https://manageit-kkrl.onrender.com/api/employees to wake up free Render instance.
+- Currently, all employee data is visible to anyone accessing the system. Due to time constraints, proper user session isolation per visitor has not been implemented.
 
 **Frontend (Vercel)**: [https://manage-it-eight.vercel.app/](https://manage-it-eight.vercel.app)  
 **Backend (Render)**: [https://manageit-kkrl.onrender.com/api/employees](https://manageit-kkrl.onrender.com) (hit once before frontend use to wake up free Render instance)
+
+<img width="920" height="434" alt="image" src="https://github.com/user-attachments/assets/8079f4b2-fdd0-488d-ab95-3543ec1e8d08" />
+<img width="934" height="421" alt="image" src="https://github.com/user-attachments/assets/2464ec79-82ce-468f-906c-0cb71b7dd3e0" />
+
 
 ---
 
