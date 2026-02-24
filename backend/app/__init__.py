@@ -26,7 +26,7 @@ def create_app():
     migrate.init_app(app, db)
 
     CORS(app, resources={
-        r"/api/*": {
+        r"/*": {
             "origins": "*",
             "methods": ["GET", "POST", "DELETE", "OPTIONS"],
             "allow_headers": [
