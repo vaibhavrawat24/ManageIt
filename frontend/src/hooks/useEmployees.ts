@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import api from "@/api";
-import type { Employee, ApiError } from "@/types";
+import type { Employee } from "@/types";
 
 interface UseEmployeesReturn {
   employees: Employee[];

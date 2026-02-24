@@ -5,7 +5,7 @@ import api from "@/api";
 import toast from "react-hot-toast";
 
 export default function EmployeeList() {
-  const { employees, isLoading, error, refreshEmployees } = useEmployees();
+  const { employees, refreshEmployees } = useEmployees();
 
   const handleDeleteEmployee = async (id: number, name: string) => {
     if (

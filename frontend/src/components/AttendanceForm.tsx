@@ -40,7 +40,6 @@ export default function AttendanceForm({
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
